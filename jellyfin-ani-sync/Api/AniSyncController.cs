@@ -25,7 +25,6 @@ using MediaBrowser.Common.Configuration;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Model;
-using MediaBrowser.Model.IO;
 using MediaBrowser.Model.Plugins;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -46,7 +45,6 @@ namespace jellyfin_ani_sync.Api {
         private readonly IUserManager _userManager;
         private readonly IApplicationPaths _applicationPaths;
         private readonly IUserDataManager _userDataManager;
-        private readonly IFileSystem _fileSystem;
         private readonly ILogger<AniSyncController> _logger;
         private readonly IMemoryCache _memoryCache;
         private readonly IAsyncDelayer _delayer;
@@ -59,7 +57,6 @@ namespace jellyfin_ani_sync.Api {
             IUserManager userManager,
             IApplicationPaths applicationPaths,
             IUserDataManager userDataManager,
-            IFileSystem fileSystem,
             IMemoryCache memoryCache) {
             _httpClientFactory = httpClientFactory;
             _loggerFactory = loggerFactory;
@@ -69,7 +66,6 @@ namespace jellyfin_ani_sync.Api {
             _userManager = userManager;
             _applicationPaths = applicationPaths;
             _userDataManager = userDataManager;
-            _fileSystem = fileSystem;
             _logger = loggerFactory.CreateLogger<AniSyncController>();
             _memoryCache = memoryCache;
             _delayer = new Delayer();
@@ -257,7 +253,7 @@ namespace jellyfin_ani_sync.Api {
         public Task Sync(ApiName provider, string userId, SyncHelper.Status status, SyncAction syncAction) {
             switch (syncAction) {
                 case SyncAction.UpdateProvider:
-                    SyncProviderFromLocal syncProviderFromLocal = new SyncProviderFromLocal(_userManager, _libraryManager, _loggerFactory, _httpClientFactory, _applicationPaths, _fileSystem, _memoryCache, _delayer, userId);
+                    SyncProviderFromLocal syncProviderFromLocal = new SyncProviderFromLocal(_userManager, _libraryManager, _loggerFactory, _httpClientFactory, _applicationPaths, _memoryCache, _delayer, userId);
                     return syncProviderFromLocal.SyncFromLocal();
                 case SyncAction.UpdateJellyfin:
                     Sync sync = new Sync(_httpClientFactory, _loggerFactory, _serverApplicationHost, _httpContextAccessor, _userManager, _libraryManager, _applicationPaths, _userDataManager, _memoryCache, _delayer, provider, status);

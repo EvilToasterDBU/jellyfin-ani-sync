@@ -23,7 +23,6 @@ using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
-using MediaBrowser.Model.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -43,14 +42,12 @@ namespace jellyfin_ani_sync {
         private UserConfig? _userConfig;
         private Type _animeType;
         private readonly ILibraryManager _libraryManager;
-        private readonly IFileSystem _fileSystem;
 
         internal ApiName ApiName;
         private readonly ILoggerFactory _loggerFactory;
         private AnimeOfflineDatabaseHelpers.OfflineDatabaseResponse _apiIds = new ();
 
-        public UpdateProviderStatus(IFileSystem fileSystem,
-            ILibraryManager libraryManager,
+        public UpdateProviderStatus(ILibraryManager libraryManager,
             ILoggerFactory loggerFactory,
             IHttpContextAccessor httpContextAccessor,
             IServerApplicationHost serverApplicationHost,
@@ -58,7 +55,6 @@ namespace jellyfin_ani_sync {
             IApplicationPaths applicationPaths,
             IMemoryCache memoryCache,
             IAsyncDelayer delayer) {
-            _fileSystem = fileSystem;
             _libraryManager = libraryManager;
             _httpContextAccessor = httpContextAccessor;
             _serverApplicationHost = serverApplicationHost;
@@ -93,7 +89,7 @@ namespace jellyfin_ani_sync {
                 return;
             }
 
-            if (LibraryCheck(_userConfig, _libraryManager, _fileSystem, _logger, e) && video is Episode or Movie && playedToCompletion) {
+            if (LibraryCheck(_userConfig, _libraryManager, _logger, e) && video is Episode or Movie && playedToCompletion) {
                 if ((video is Episode && (episode.IndexNumber == null ||
                                           episode.Season.IndexNumber == null)) ||
                     (video is Movie && movie.IndexNumber == null)) {
@@ -448,11 +444,10 @@ namespace jellyfin_ani_sync {
         /// </summary>
         /// <param name="userConfig">User config.</param>
         /// <param name="libraryManager">Library manager instance.</param>
-        /// <param name="fileSystem">File system instance.</param>
         /// <param name="logger">Logger instance.</param>
         /// <param name="item">Item to check location of.</param>
         /// <returns></returns>
-        public static bool LibraryCheck(UserConfig userConfig, ILibraryManager libraryManager, IFileSystem fileSystem, ILogger logger, BaseItem item) {
+        public static bool LibraryCheck(UserConfig userConfig, ILibraryManager libraryManager, ILogger logger, BaseItem item) {
             try {
                 // user has no library filters
                 if (userConfig.LibraryToCheck is { Length: 0 }) {

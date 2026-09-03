@@ -21,7 +21,6 @@ using NUnit.Framework;
 namespace jellyfin_ani_sync_unit_tests;
 
 public class GeneralFlowTests {
-    private Mock<IFileSystem> _mockFileSystem { get; set; }
     private Mock<ILibraryManager> _mockLibraryManager { get; set; }
     private ILoggerFactory _LoggerFactory { get; set; }
     private Mock<IHttpContextAccessor> _mockHttpContextAccessor { get; set; }
@@ -35,7 +34,6 @@ public class GeneralFlowTests {
 
     [SetUp]
     public void SetUp() {
-        _mockFileSystem = new Mock<IFileSystem>();
         _mockLibraryManager = new Mock<ILibraryManager>();
         _LoggerFactory = new NullLoggerFactory();
         _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -45,8 +43,7 @@ public class GeneralFlowTests {
         _mockApiCallHelpers = new Mock<IApiCallHelpers>();
         _memoryCache = new MemoryCache(new MemoryCacheOptions());
         _mockAsyncDelayer = new Mock<IAsyncDelayer>();
-        _updateProviderStatus = new UpdateProviderStatus(_mockFileSystem.Object,
-            _mockLibraryManager.Object, _LoggerFactory, _mockHttpContextAccessor.Object,
+        _updateProviderStatus = new UpdateProviderStatus(_mockLibraryManager.Object, _LoggerFactory, _mockHttpContextAccessor.Object,
             _mockServerApplicationHost.Object, _mockHttpClientFactory.Object, _mockApplicationPaths.Object,
             _memoryCache, _mockAsyncDelayer.Object);
         _updateProviderStatus.ApiCallHelpers = _mockApiCallHelpers.Object;
