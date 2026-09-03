@@ -8,6 +8,14 @@
     "overview": "Synchronize anime watch status",
     "versions": [
       {
+        "checksum": "37378a760f82049a526a6ce89a7bb8fd",
+        "changelog": "1. Various improvements to media detection.",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://github.com/vosmiic/jellyfin-ani-sync/releases/download/v4.5b/10.11.11.-.ani-sync_4.5.0.0.zip",
+        "timestamp": "2026-09-03T00:00:00Z",
+        "version": "4.5.0.0"
+      },
+      {
         "checksum": "070e1ade2ed8bf23c7e67a8c2f09e469",
         "changelog": "1. Added custom domain support for Shikimori.",
         "targetAbi": "10.11.8.0",
